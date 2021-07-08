@@ -2,7 +2,6 @@
 import glob
 import sys
 import lxml.etree as etree
-from urllib import request 
 
 # namespace declarations
 class XMLNamespaces:
@@ -28,7 +27,8 @@ for filename in glob.iglob(rootdir + '**/mets.xml', recursive=True):
     # create initial download filegroup 
     elementGrp = etree.Element(etree.QName("http://www.loc.gov/METS/", "fileGrp"))
     elementGrp.attrib["USE"] = "DOWNLOAD"
-
+    
+    i = 0
     # iterate over all file entries
     for file in files:
 
@@ -46,6 +46,18 @@ for filename in glob.iglob(rootdir + '**/mets.xml', recursive=True):
         elementFLocat = etree.SubElement(elementFile, etree.QName(XMLNamespaces.mets, "FLocat"), {"LOCTYPE": "", etree.QName(XMLNamespaces.xlink, "href"): ""})
         elementFLocat.attrib["LOCTYPE"] = "URL"
         elementFLocat.attrib[etree.QName(XMLNamespaces.xlink, "href")] = file.find("{http://www.loc.gov/METS/}FLocat").attrib[etree.QName(XMLNamespaces.xlink, "href")]
+
+        # build filepointer
+        id = "ID_" + ids_split[1]
+        f_id = "FID_" + ids_split[1] + "_DLT"
+        
+        fptr = el.findall("//mets:div[@TYPE='page']", namespaces = {"mets": "http://www.loc.gov/METS/"})  
+
+        elementFptr = etree.SubElement(fptr[i], etree.QName(XMLNamespaces.mets, "fptr"), {"FILEID": f_id})
+
+        fptr[i].append(elementFptr)
+
+        i = i + 1
 
     # print(etree.tostring(elementGrp))
 
