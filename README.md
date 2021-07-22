@@ -1,5 +1,8 @@
 # mets_enhancer
 
+Installation der Abhängigkeiten per
+`pip install -r requirements.txt`
+
 Aufruf des Skripts per
 `C:/Python39/python.exe d:/Arbeit/Python_METS/METS.py D:\` 
 
