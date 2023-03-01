@@ -1,3 +1,5 @@
+# Changes sequence of daoloc elements in EAD files
+
 # imports
 import glob
 import sys
@@ -22,7 +24,7 @@ for filename in glob.iglob(rootdir + '**/*.xml', recursive=True):
     el = etree.parse(filename)
 
     # find default filegroup for copying values
-    files = el.findall("//ead:daoloc, namespaces = {"ead": "urn:isbn:1-931666-22-9"})  
+    files = el.findall("//ead:daoloc", namespaces = {"ead": "urn:isbn:1-931666-22-9"})  
     
     i = 0
     # iterate over all file entries
@@ -32,10 +34,10 @@ for filename in glob.iglob(rootdir + '**/*.xml', recursive=True):
         # build new daoloc element and fill content from DEFAULT
         elementGrp = etree.Element(etree.QName("urn:isbn:1-931666-22-9", "daoloc"))
 
-        elementGrp.attrib["xlink:role"] = "METS"
-        elementGrp.attrib["xlink:href"] = file.attrib["xlink:href"]
+        elementGrp.attrib[etree.QName(XMLNamespaces.xlink, "role")] = "METS"
+        elementGrp.attrib[etree.QName(XMLNamespaces.xlink, "href")] = file.attrib[etree.QName(XMLNamespaces.xlink, "href")]
 
-        parent = file.parent()
+        parent = file.getparent()
         parent.append(elementGrp)
         parent.remove(file)
     
